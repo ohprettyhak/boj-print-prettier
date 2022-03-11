@@ -1,11 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import useAxios from 'axios-hooks';
 
 import { Head, Navigation } from '../components';
 
 const Hello = styled.div`
-  margin-top: 56px;
+  max-width: 720px;
+  width: 100%;
+  margin: 96px auto 0 auto;
+`;
+
+const HelloTitle = styled.h1`
+  color: #495057;
+  font-size: 2.6rem;
+  font-weight: 700;
+  text-align: center;
+  letter-spacing: -0.5px;
+  white-space: nowrap;
+`;
+
+const HelloSubtitle = styled.h2`
+  color: #6a7075;
+  text-align: center;
+  letter-spacing: -0.5px;
+`;
+
+const HelloDescription = styled.p`
+  margin-top: 28px;
+  color: #495057;
+  text-align: center;
+  letter-spacing: -0.5px;
 `;
 
 const SearchBarStyle = styled.div`
@@ -65,12 +89,18 @@ const SearchBarInput = styled.input`
 `;
 
 const Home: React.FC = React.memo(() => {
+  const [query, setQuery] = useState('');
   const [problem, setProblem] = useState('');
 
   const [{ data, loading, error }] = useAxios({
     url: 'https://solved.ac/api/v3/search/problem/',
     params: { query: problem, sort: 'id' },
   });
+
+  useEffect(() => {
+    const timeOutId = setTimeout(() => setProblem(query), 500);
+    return () => clearTimeout(timeOutId);
+  }, [query]);
 
   if (error) return <p>Error!</p>;
 
@@ -79,8 +109,15 @@ const Home: React.FC = React.memo(() => {
       <Head />
       <Navigation />
       <main>
+        <Hello>
+          <HelloTitle>BOJ Print Prettier</HelloTitle>
+          <HelloSubtitle>백준 문제 예쁘게 출력하기</HelloSubtitle>
+        </Hello>
         <SearchBarStyle>
-          <SearchBarInput placeholder="Search problems... (id, title, ..)"></SearchBarInput>
+          <SearchBarInput
+            placeholder="Search problems... (id, title, ..)"
+            onChange={(event) => setQuery(event.target.value)}
+          ></SearchBarInput>
           <SearchBarIconContainer>
             <ion-icon name="search-outline" />
           </SearchBarIconContainer>
@@ -89,7 +126,6 @@ const Home: React.FC = React.memo(() => {
           </SearchBarButton>
         </SearchBarStyle>
         <p>{!loading ? data.count : ''}</p>
-        <button onClick={() => setProblem('1655')}>btn</button>
       </main>
     </React.Fragment>
   );
