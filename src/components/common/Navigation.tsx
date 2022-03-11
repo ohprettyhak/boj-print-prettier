@@ -53,8 +53,6 @@ const TopLinkList = styled.li`
     color: #343a40;
     font-size: 0.95rem;
     font-weight: 400;
-    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', Pretendard, Roboto, 'Noto Sans KR',
-      'Segoe UI', 'Malgun Gothic', sans-serif;
     text-decoration: none;
     text-align: center;
     user-select: none;
@@ -70,8 +68,6 @@ const LogoGoHome = styled(Link)`
   display: flex;
   align-items: center;
   font-size: 0.95rem;
-  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', Pretendard, Roboto, 'Noto Sans KR',
-    'Segoe UI', 'Malgun Gothic', sans-serif;
   text-decoration: none;
   user-select: none;
   opacity: 1;
@@ -86,8 +82,6 @@ const LogoGoTop = styled.p`
   display: flex;
   align-items: center;
   font-size: 0.95rem;
-  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', Pretendard, Roboto, 'Noto Sans KR',
-    'Segoe UI', 'Malgun Gothic', sans-serif;
   user-select: none;
   opacity: 1;
   transition: opacity 0.2s ease;
@@ -106,8 +100,6 @@ const LogoVersion = styled.span`
   color: #868b98;
   font-size: 10px;
   font-weight: 600;
-  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', Pretendard, Roboto, 'Noto Sans KR',
-    'Segoe UI', 'Malgun Gothic', sans-serif;
   border-radius: 4px;
   background-color: #ecf0f6;
 `;

@@ -10,7 +10,7 @@ const GlobalStyle = createGlobalStyle`
         margin: 0;
         padding: 0;
         line-height: 1.5;
-        font-family: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', Pretendard, Roboto, 'Noto Sans KR', 'Segoe UI', 'Malgun Gothic', sans-serif;
+        font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', Pretendard, Roboto, 'Noto Sans KR', 'Segoe UI', 'Malgun Gothic', sans-serif;
         -webkit-text-size-adjust: 100%;
         color: #495057;
     }
