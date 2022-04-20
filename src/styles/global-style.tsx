@@ -6,7 +6,7 @@ const GlobalStyle = createGlobalStyle`
         -webkit-font-smoothing: antialiased;
     }
 
-    html, body, span, figure, p, h1, h2, h3, h4, h5, h6, button, a, input {
+    html, body, figure, p, h1, h2, h3, h4, h5, h6, button, a, input {
         margin: 0;
         padding: 0;
         line-height: 1.5;
@@ -43,6 +43,14 @@ const GlobalStyle = createGlobalStyle`
         -moz-animation: fadein 0.75s ease-out;
         -webkit-animation: fadein 0.75s ease-out;
         -o-animation: fadein 0.75s ease-out;
+    }
+
+    .katex-display {
+        margin: 0 !important;
+    }
+
+    .katex {
+        font-size: 1rem !important;
     }
 
     @keyframes fadein-dropdown {

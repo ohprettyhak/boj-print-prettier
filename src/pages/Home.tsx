@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import useAxios from 'axios-hooks';
+import 'katex/dist/katex.min.css';
+import Latex from 'react-latex';
 
 import { Head, Navigation } from '../components';
 
@@ -11,7 +14,7 @@ const Hello = styled.div`
 `;
 
 const HelloTitle = styled.h1`
-  color: #495057;
+  color: #343a40;
   font-size: 2.6rem;
   font-weight: 700;
   text-align: center;
@@ -21,13 +24,7 @@ const HelloTitle = styled.h1`
 
 const HelloSubtitle = styled.h2`
   color: #6a7075;
-  text-align: center;
-  letter-spacing: -0.5px;
-`;
-
-const HelloDescription = styled.p`
-  margin-top: 28px;
-  color: #495057;
+  font-weight: 600;
   text-align: center;
   letter-spacing: -0.5px;
 `;
@@ -76,7 +73,7 @@ const SearchBarInput = styled.input`
   box-shadow: 0 1px 4px rgba(33, 33, 33, 0.1);
   border-radius: 12px;
   background-color: white;
-  transition: all 0.3s ease;
+  transition: all 0.3s ease-in-out;
 
   ::placeholder {
     color: #bec7d5;
@@ -85,6 +82,57 @@ const SearchBarInput = styled.input`
   :focus {
     box-shadow: 0 1px 8px rgba(33, 33, 33, 0.25);
     border-color: rgba(223, 225, 229, 0);
+  }
+`;
+
+const SearchResultContainer = styled.div`
+  position: relative;
+  width: 100%;
+  max-width: 720px;
+  margin: 42px auto 0 auto;
+  border: 1px solid #eeeeee;
+  box-shadow: 0 1px 4px rgba(33, 33, 33, 0.1);
+  border-radius: 12px;
+  overflow: auto;
+  box-sizing: border-box;
+  background-color: white;
+`;
+
+const SearchResultTable = styled.div`
+  display: table;
+  width: 100%;
+  box-sizing: border-box;
+  white-space: nowrap;
+`;
+
+const SearchResultItem = styled.div`
+  display: table-row;
+  width: 100%;
+
+  :nth-child(-n + 1) {
+    background: #eeeeee;
+    font-weight: bold;
+    text-align: center;
+  }
+`;
+
+const SearchResultItemCell = styled.div`
+  display: table-cell;
+  box-sizing: border-box;
+  padding: 8px 16px;
+  color: #343a40;
+`;
+
+const SearchResultItemLink = styled(Link)`
+  display: inline-block;
+  color: #343a40;
+  line-height: 1em;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  border-spacing: -2px;
+
+  :hover {
+    border-bottom: 1px solid #343a40;
   }
 `;
 
@@ -104,6 +152,46 @@ const Home: React.FC = React.memo(() => {
 
   if (error) return <p>Error!</p>;
 
+  console.log(data);
+
+  const makeTierElement = (level: number) => {
+    if (level === 0)
+      return (
+        <SearchResultItemCell style={{ width: '15%', textAlign: 'center', color: 'black' }}>
+          Unrated
+        </SearchResultItemCell>
+      );
+
+    let tier = level % 5;
+    if (tier === 0) tier = 5;
+
+    let textColor = 'rgb(33, 33, 33)';
+    let rst = 'Unrated';
+    if (level < 6) {
+      textColor = 'rgb(173, 86, 0)';
+      rst = `B${tier}`;
+    } else if (level < 11) {
+      textColor = 'rgb(67, 95, 122)';
+      rst = `S${tier}`;
+    } else if (level < 16) {
+      textColor = 'rgb(236, 154, 0)';
+      rst = `G${tier}`;
+    } else if (level < 21) {
+      textColor = 'rgb(39, 226, 164)';
+      rst = `P${tier}`;
+    } else if (level < 26) {
+      textColor = 'rgb(0, 180, 252)';
+      rst = `D${tier}`;
+    } else {
+      textColor = 'rgb(255, 0, 98)';
+      rst = `R${tier}`;
+    }
+
+    return (
+      <SearchResultItemCell style={{ width: '15%', textAlign: 'center', color: textColor }}>{rst}</SearchResultItemCell>
+    );
+  };
+
   return (
     <React.Fragment>
       <Head />
@@ -116,7 +204,7 @@ const Home: React.FC = React.memo(() => {
         <SearchBarStyle>
           <SearchBarInput
             placeholder="Search problems... (id, title, ..)"
-            onChange={(event) => setQuery(event.target.value)}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) => setQuery(event.target.value)}
           ></SearchBarInput>
           <SearchBarIconContainer>
             <ion-icon name="search-outline" />
@@ -125,7 +213,35 @@ const Home: React.FC = React.memo(() => {
             <ion-icon name="arrow-forward-outline" />
           </SearchBarButton>
         </SearchBarStyle>
-        <p>{!loading ? data.count : ''}</p>
+        <SearchResultContainer>
+          <SearchResultTable>
+            <SearchResultItem>
+              <SearchResultItemCell style={{ width: '15%' }}>티어</SearchResultItemCell>
+              <SearchResultItemCell style={{ width: '12.5%' }}>#</SearchResultItemCell>
+              <SearchResultItemCell style={{ width: '55%' }}>제목</SearchResultItemCell>
+              <SearchResultItemCell style={{ width: '17.5%' }}>평균 시도 횟수</SearchResultItemCell>
+            </SearchResultItem>
+            {!loading &&
+              data.items.map((member: any) => (
+                <React.Fragment key={member.problemId}>
+                  <SearchResultItem>
+                    {makeTierElement(member.level)}
+                    <SearchResultItemCell style={{ width: '12.5%', textAlign: 'center' }}>
+                      <SearchResultItemLink to={`/${member.problemId}`}>{member.problemId}</SearchResultItemLink>
+                    </SearchResultItemCell>
+                    <SearchResultItemCell style={{ width: '55%' }}>
+                      <SearchResultItemLink to={`/${member.problemId}`}>
+                        <Latex displayMode={true}>{member.titleKo}</Latex>
+                      </SearchResultItemLink>
+                    </SearchResultItemCell>
+                    <SearchResultItemCell style={{ width: '17.5%', textAlign: 'center' }}>
+                      {member.averageTries}
+                    </SearchResultItemCell>
+                  </SearchResultItem>
+                </React.Fragment>
+              ))}
+          </SearchResultTable>
+        </SearchResultContainer>
       </main>
     </React.Fragment>
   );
