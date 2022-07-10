@@ -269,6 +269,5 @@ typings/
 
 # gatsby files
 .cache/
-public
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,macos,react,webstorm+all,visualstudiocode,yarn
